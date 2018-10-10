@@ -17,7 +17,7 @@ class ShipTest < Minitest::Test
   def test_it_has_attributes
     destroyer = Ship.new("Destroyer", 2)
     assert_equal "Destroyer", destroyer.name
-    assert_equal 2, destroyer.length
+    assert_equal 2, destroyer.size
     assert_equal 0, destroyer.hit_count
   end
 

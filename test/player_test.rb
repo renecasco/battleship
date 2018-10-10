@@ -18,6 +18,8 @@ class PlayerTest < Minitest::Test
     player_1 = Player.new("Joe", board_1)
     assert_equal board_1, player_1.board
     assert_equal "Joe", player_1.name
+    assert_equal true, player_1.name
   end
+
 
 end
