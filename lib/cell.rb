@@ -2,20 +2,24 @@ require './lib/ship'
 
 class Cell
   attr_reader :name,
-              :contents,
+              :ship,
               :peg
 
   def initialize(name)
     @name = name
-    @contents = nil
-    @peg = nil
+    @ship = nil
+    @peg = " "
   end
 
-  def place_peg(peg)
-    @peg = peg
+  def place_peg
+    if @ship == nil
+      @peg = "W"
+    else
+      @peg = "R"
+    end
   end
 
-  def point_to_ship(ship)
-    @contents = ship
+  def add_ship(ship)
+    @ship = ship
   end
 end

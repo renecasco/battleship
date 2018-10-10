@@ -15,22 +15,31 @@ class CellTest < Minitest::Test
   def test_it_has_attributes
     cell = Cell.new("A1")
     assert_equal "A1", cell.name
-    assert_equal nil, cell.contents
-    assert_equal nil, cell.peg
+    assert_nil cell.ship
+    assert_equal " ", cell.peg
   end
 
-  def test_it_places_peg
+  def test_it_changes_contents
     cell = Cell.new("A1")
-    actual = cell.place_peg(:hit)
-    expected = :hit
+    ship = Ship.new("Destroyer", 2)
+    actual = cell.add_ship(ship)
+    expected = ship
     assert_equal expected, actual
   end
 
-  def test_it_points_to_ship
+  def test_it_places_hit_peg
     cell = Cell.new("A1")
-    ship = Ship.new("A1", "A2", "Aircraft Carrier")
-    actual = cell.point_to_ship(ship)
-    expected = ship
+    ship = Ship.new("Destroyer", 2)
+    cell.add_ship(ship)
+    actual = cell.place_peg
+    expected = "R"
+    assert_equal expected, actual
+  end
+
+  def test_it_places_miss_peg
+    cell = Cell.new("A1")
+    actual = cell.place_peg
+    expected = "W"
     assert_equal expected, actual
   end
 
