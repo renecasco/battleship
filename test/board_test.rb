@@ -24,12 +24,11 @@ class BoardTest < Minitest::Test
     assert_equal "C4", board.cell_grid[2][3].name
   end
 
-  def test_it_prints_board
+  def test_it_assembles_board_string
     board = Board.new
-    actual = board.print_board
-    binding.pry
+    actual = board.get_board_string
     expected =
-"========================
+"=======================
 . 1 2 3 4 5 6 7 8 9 10
 A\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s
 B\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s
@@ -41,7 +40,7 @@ G\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s
 H\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s
 I\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s
 J\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s
-========================"
+=======================\n"
 
     assert_equal expected, actual
   end

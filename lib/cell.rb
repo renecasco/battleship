@@ -22,4 +22,12 @@ class Cell
   def add_ship(ship)
     @ship = ship
   end
+
+  def grid_y #returns grid y coord of any cell
+    ("A".."J").to_a.index(@name[0])
+  end
+  
+  def grid_x #returns grid x coord of any cell
+    @name[1..-1].to_i - 1
+  end
 end
