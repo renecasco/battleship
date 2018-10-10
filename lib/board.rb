@@ -26,19 +26,23 @@ class Board
   end
 
   def get_row(y)
-    letter_key = ("A".."J").to_a
-    row_string = letter_key[y]
+    #Place letter at front of row string
+    row_string = ("A".."J").to_a[y]
+    #Place visual cell graphics in row string
     @cell_grid[y].each do |cell|
-      if cell.peg == :hit
-        row_string += " R"
-      elsif cell.peg == :miss
-        row_string += " W"
-      else
-        row_string += "  "
-      end
+      row_string += cell.cell_graphic
     end
     row_string += "\n"
     row_string
+
+  def cell_graphic(cell)
+    if cell.peg == :hit
+      " R"
+    elsif cell.peg == :miss
+      " W"
+    else
+      "  "
+    end
   end
 
 end

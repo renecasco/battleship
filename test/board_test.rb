@@ -27,7 +27,6 @@ class BoardTest < Minitest::Test
   def test_it_prints_board
     board = Board.new
     actual = board.print_board
-    binding.pry
     expected =
 "========================
 . 1 2 3 4 5 6 7 8 9 10
