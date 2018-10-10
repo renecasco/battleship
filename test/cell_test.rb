@@ -19,6 +19,7 @@ class CellTest < Minitest::Test
     assert_equal " ", cell.peg
   end
 
+
   def test_it_contains_ship
     cell = Cell.new("A1")
     ship = Ship.new("A1", "A2", "Aircraft Carrier")
