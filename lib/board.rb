@@ -1,11 +1,31 @@
 require './lib/cell'
+require './lib/ship'
 
 class Board
-  attr_reader :cell_grid
+  attr_reader :cell_grid, :ship_array
 
   def initialize
     @cell_grid = generate_grid
+    @ship_array = initialize_ships
   end
+
+  def initialize_ships
+    ship_specs = [ {name: "Destroyer", size: 2},
+                  {name: "Submarine", size: 3},
+                  {name: "Cruiser", size: 3},
+                  {name: "Battleship", size: 4},
+                  {name: "Carrier", size: 5} ]
+    ship_array = []
+    ship_specs.each do |spec|
+      ship_array << Ship.new(spec[:name],spec[:size])
+    end
+  end
+
+  def place_ship(ship, start_position, end_position)
+    up_or_down?
+    proper_length?
+    no_overlap?
+
 
   def generate_grid
     ("A".."J").map do |y|

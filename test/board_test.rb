@@ -45,4 +45,13 @@ J\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s\s
     assert_equal expected, actual
   end
 
+  def test_it_initializes_ships
+    board = Board.new
+    assert_equal 5, board.ship_array.length
+    assert_equal "Destroyer", board.ship_array[0][:name]
+    assert_equal 2, board.ship_array[0][:size]
+    assert_equal "Carrier", board.ship_array[4][:name]
+    assert_equal 5, board.ship_array[4][:size]
+  end
+
 end
