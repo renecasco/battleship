@@ -1,3 +1,4 @@
+
 class Ship
   attr_reader :name,
               :size,

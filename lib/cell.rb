@@ -1,4 +1,3 @@
-require './lib/ship'
 
 class Cell
   attr_reader :name,
@@ -12,10 +11,11 @@ class Cell
   end
 
   def place_peg
+    return :duplicate_shot_error if @peg != " "
     if @ship == nil
-      @peg = "W"
+      @peg = "*"
     else
-      @peg = "R"
+      @peg = "X"
     end
   end
 
@@ -26,7 +26,7 @@ class Cell
   def grid_y #returns grid y coord of any cell
     ("A".."J").to_a.index(@name[0])
   end
-  
+
   def grid_x #returns grid x coord of any cell
     @name[1..-1].to_i - 1
   end
