@@ -1,6 +1,3 @@
-require './lib/cell'
-require './lib/ship'
-
 class Board
   attr_reader :cell_grid, :ship_array
 
@@ -97,13 +94,21 @@ class Board
     cell_name[1..-1].to_i - 1
   end
 
+  def register_shot(cell_name)
+    target_cell = @cell_grid[y_coord(cell_name)][x_coord(cell_name)]
+    target_cell.place_peg
+    #returns :duplicate_shot_error if cell was already fired upon
+    #otherwise, it returns the value of peg in the target cell
+    #These returns come from the cell.place_peg method
+  end
+
   def generate_grid
     ("A".."J").map do |y|
       (1..10).map { |x| Cell.new(y + x.to_s) }
     end
   end
 
-  def print_board(style = :complete)
+  def print_board(style = :visible)
     print get_board_string(style)
   end
 
@@ -116,19 +121,18 @@ class Board
       y += 1
     end
     board_string += border
-    if style == :contents
+    if style != :hidden
       board_string += board_key
     end
+    board_string
   end
 
   def border
     "=======================\n"
   end
-
   def board_key
-    'Ship = S, Hit = X, Miss = *\n'
+    "S = Ship  X = Hit  * = Miss\n"
   end
-
   def header_row
     ". 1 2 3 4 5 6 7 8 9 10\n"
   end
@@ -138,17 +142,17 @@ class Board
     row_string = ("A".."J").to_a[y] #Place letter at front of row string
     @cell_grid[y].each do |cell| #Place visual cell graphics in row string
       row_string += " "
-      if style == :pegs
+      if style == :hidden
         row_string += cell.peg
-      end
-      #else
-      #  if cell.peg == " " && cell.ship
-      #    row_string += "S"
-      #  else
-      #    row_string += cell.peg
-      #  end #if
-      #end # else
+      else
+        if cell.peg == " " && cell.ship
+          row_string += "S"
+        else
+          row_string += cell.peg
+        end #if
+      end # else
     end # each loop
     row_string += "\n"
   end # board_row
+
 end
