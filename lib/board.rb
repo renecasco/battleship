@@ -1,5 +1,9 @@
+# This class requires access to the Cell & Ship classes
+
 class Board
   attr_reader :cell_grid, :ship_array
+
+### INITIALIZATION AND SETUP METHODS ###
 
   def initialize
     @cell_grid = generate_grid
@@ -89,8 +93,7 @@ class Board
 ### METHOD FOR REGISTERING A SHOT ###
 
   def register_shot(cell_name)
-    target_cell = @cell_grid[y_coord(cell_name)][x_coord(cell_name)]
-    target_cell.place_peg
+    @cell_grid[y_coord(cell_name)][x_coord(cell_name)].place_peg
     #returns :duplicate_shot_error if cell was already fired upon
     #otherwise, it returns the value of peg in the target cell
     #These returns come from the cell.place_peg method
@@ -143,13 +146,13 @@ class Board
     key_string += "X = Hit  * = Miss\n"
   end
 
-### GENERAL UTILITY METHODS FOR CLASS ###
+### GENERAL UTILITY METHODS FOR BOARD CLASS ###
 
   def get_start_index(points)
     # When preparing to enumerate between two cells, this method
     # gets the index for starting enumeration, whether the two cells
-    # are in horizontal or vertical orientation.
-    # The starting cell is the lower of the two, so that the
+    # are in horizontal or vertical orientation. The starting cell
+    # has the lower array index of the two, so that the
     # enumeration can always proceed in a positive (+1) direction.
     if direction(points) == :horizontal
       points[1][:x] > points[0][:x] ? points[0][:x] : points[1][:x]
@@ -164,4 +167,4 @@ class Board
     cell_name[1..-1].to_i - 1
   end
 
-end #class
+end #class Board
