@@ -1,15 +1,17 @@
 require './lib/board'
 require './lib/ship'
 require './lib/cell'
+require './lib/colors'
+require './lib/display'
 require 'pry'
 
+display = Display.new
 board = Board.new
-
-#first four ships properly placed
+ #first four ships properly placed
 p board.place_ship(board.ship_array[0], "D10", "C10")
 p board.place_ship(board.ship_array[1], "G4", "G6")
 p board.place_ship(board.ship_array[2], "G8", "I8")
-p board.place_ship(board.ship_array[3], "A2", "A5")
+p board.place_ship(board.ship_array[3], "A1", "A4")
 
 #ships placed with orientation error
 p board.place_ship(board.ship_array[4], "D10", "C9")
@@ -47,5 +49,6 @@ p board.register_shot("H3")
 p board.register_shot("I2")
 p board.register_shot("B9")
 
-board.print_board(:hidden)
-board.print_board
+
+display.show_ship_placement(board)
+display.show_console(board, board)
