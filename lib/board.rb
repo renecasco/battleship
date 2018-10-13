@@ -99,51 +99,67 @@ class Board
     #These returns come from the cell.place_peg method
   end
 
-### METHODS FOR PRINTING THE BOARD ###
+### METHODS FOR CREATING A VISUAL GRID ARRAY ###
+# Returns an array of 10 strings, which can be printed
+# as sequential rows to show the current state of the board
 
-  def print_board(style = :visible)
-    #if style = :hidden, then ships are not shown
-    print get_board_string(style)
-  end
-  def get_board_string(style)
-    board_string = border
-    board_string += header_row
+  def visual_grid(style)
+    visual_rows = []
     y = 0
     while y <= 9 do
-      board_string += board_row(y, style)
+      if style == :balistics
+        visual_rows[y] = balistics_row(y)
+      else #style == :ships or anything else
+        visual_rows[y] = ships_row(y)
+      end
       y += 1
     end
-    board_string += border
-    board_string += board_key(style)
-    board_string += "\n"
+    visual_rows
   end
-  def border
-    "=======================\n"
-  end
-  def header_row
-    ". 1 2 3 4 5 6 7 8 9 10\n"
-  end
-  def board_row(y, style)
-    #if style = :hidden, ships are not shown
-    row_string = ("A".."J").to_a[y] #Place letter at front of row string
-    @cell_grid[y].each do |cell| #Place visual cell graphics in row string
-      row_string += " "
-      if style == :hidden
-        row_string += cell.peg
+  def balistics_row(y)
+    row_string = " ".bg_cyan #lead row with cyan border
+    @cell_grid[y].each do |cell| #For each cell in this row
+      #Place the appropriate symbol or space
+      if cell.peg == "X"
+        row_string += "X".bold.red.bg_cyan
       else
-        if cell.peg == " " && cell.ship
-          row_string += "S"
-        else
-          row_string += cell.peg
-        end #if
-      end # else
-    end # each loop
-    row_string += "\n"
-  end # board_row
-  def board_key(style)
-    #if style = :hidden, the ship key is not added
-    key_string = style != :hidden ? "S = Ship  " : ""
-    key_string += "X = Hit  * = Miss\n"
+        row_string += graphical(cell.peg)
+      end
+      #Follow with a cyan space
+      row_string += " ".bg_cyan
+    end
+    row_string
+  end
+  def ships_row(y)
+    row_string = leading_space(y)
+    x = 0
+    @cell_grid[y].each do |cell|
+      # First place the single symbolic charactor or space
+      if cell.ship && cell.peg == " " #if ship; and cell not hit
+        row_string += "S".black.bg_gray
+      else
+        row_string += graphical(cell.peg)
+      end
+      # Then place the space following the above
+      if cell.ship || (x != 9 && @cell_grid[y][x + 1].ship)
+        #if this or the following cell is a ship
+        row_string += " ".bg_gray
+      else
+        row_string += " ".bg_cyan
+      end
+      x += 1
+    end
+    row_string
+  end # ships_row
+  def leading_space(y)
+    # if the first cell contains a ship, the front border is ship color,
+    # otherwise it's sea color.
+    @cell_grid[y][0].ship ? " ".bg_gray : " ".bg_cyan
+  end
+  def graphical(peg)
+    return " ".bg_cyan if peg == " "
+    return "*".black.bg_cyan if peg == "*"
+    return "X".bold.red.bg_gray if peg == "X"
   end
 
 ### GENERAL UTILITY METHODS FOR BOARD CLASS ###
