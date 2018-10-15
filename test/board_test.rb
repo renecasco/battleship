@@ -109,5 +109,5 @@ class BoardTest < Minitest::Test
     init_with_ships_n_shots
     assert_equal 10, @board.visual_grid(:ships).count
   end
-  
+
 end #BoardTest
