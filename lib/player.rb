@@ -15,7 +15,7 @@ class Player
   def place_fleet
     @board.ship_array.each do |ship|
       puts "Let's place your #{ship.name}. This ship is #{ship.size} cells long"
-      validated = false
+      correct_placement? = false
       while validated = false
         puts "Enter prow coordinates for #{ship.name}"
         prow = get_coordinates
@@ -33,11 +33,11 @@ class Player
           puts "Please check your board ship placement and try again."
           # display.show_ship_placement(board)
         else
-          validated = true
+          correct_placement = true
         end
       end
     end
-    puts "Success! You've placed all your ships on your board"
+    puts "Success! You've placed your fleet on your board"
   end
 
   def fire_shot(enemy_board)
