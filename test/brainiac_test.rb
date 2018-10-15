@@ -4,16 +4,13 @@ SimpleCov.start
 require 'minitest/autorun'
 require 'minitest/pride'
 require './lib/board'
-require './lib/cell'
-require './lib/ship'
-require './lib/colors'
-require './lib/intelliguess'
+require './lib/brainiac'
 require 'pry'
 
-class IntelliguessTest < Minitest::Test
+class BrainiacTest < Minitest::Test
   def setup
     @board = Board.new
-    @intelliguess = Intelliguess.new(@board)
+    @brainiac = Brainiac.new
   end
   def init_with_ships
     @board.place_ship(@board.ship_array[0], "D10", "C10")
@@ -41,7 +38,9 @@ class IntelliguessTest < Minitest::Test
   end
 
   def test_it_exists
-    assert_instance_of Intelliguess, @intelliguess
+    assert_instance_of Brainiac, @brainiac
+  end
+  def test_it_autoplaces_ships
   end
 
-end #IntelliguessTest
+end #BrainiacTest

@@ -1,4 +1,4 @@
-### Requires access to Board & Colors ###
+require './lib/colors'
 
 class Display
 
