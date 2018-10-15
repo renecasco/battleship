@@ -1,4 +1,3 @@
-
 class Ship
   attr_reader :name,
               :size,
@@ -15,11 +14,7 @@ class Ship
   end
 
   def sunk?
-    if @hit_count == @size
-      true
-    else
-      false
-    end
+    @hit_count == @size
   end
 
 end
