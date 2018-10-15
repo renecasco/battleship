@@ -47,6 +47,9 @@ p board.register_shot("H3")
 p board.register_shot("I2")
 p board.register_shot("B9")
 
+board.register_shot("G4")
+board.register_shot("G5")
+
 
 display.show_ship_placement(board)
 display.show_console(board, board)

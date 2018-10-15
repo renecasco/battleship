@@ -1,6 +1,4 @@
-require './lib/cell'
-
-# This class requires access to the Cell & Ship classes
+### Requires access to Cell, Ship & Colors
 
 class Board
   attr_reader :cell_grid, :ship_array
@@ -104,80 +102,96 @@ class Board
 
 
   def register_shot(cell_name)
-    @cell_grid[y_coord(cell_name)][x_coord(cell_name)].place_peg
+
+    cell = @cell_grid[y_coord(cell_name)][x_coord(cell_name)]
+    result = cell.place_peg
     #returns :duplicate_shot_error if cell was already fired upon
     #otherwise, it returns the value of peg in the target cell
-    #These returns come from the cell.place_peg method
+    cell.ship.hit! if result == "X"
+    result
   end
 
 ### METHODS FOR CREATING A VISUAL GRID ARRAY ###
-# Returns an array of 10 strings, which can be printed
-# as sequential rows to show the current state of the board
+  # Returns an array of 10 strings, which can be printed
+  # as sequential rows to show the current state of the board
 
-  def visual_grid(style)
+  def visual_grid(style = :show_ships)
     visual_rows = []
     y = 0
     while y <= 9 do
-      if style == :balistics
-        visual_rows[y] = balistics_row(y)
-      else #style == :ships or anything else
-        visual_rows[y] = ships_row(y)
+      if style == :show_ships
+        visual_rows[y] = visual_row(y, :show_ships)
+      else #style == :hide_ships or anything else
+        visual_rows[y] = visual_row(y, :hide_ships)
       end
       y += 1
     end
     visual_rows
   end
-
-  def balistics_row(y)
-    row_string = " ".bg_cyan #lead row with cyan border
-    @cell_grid[y].each do |cell| #For each cell in this row
-      #Place the appropriate symbol or space
-      if cell.peg == "X"
-        row_string += "X".bold.red.bg_cyan
-      else
-        row_string += graphical(cell.peg)
-      end
-      #Follow with a cyan space
-      row_string += " ".bg_cyan
-    end
-    row_string
+  def visual
+    { miss:             "*".black.bg_cyan,
+      ocean:            " ".bg_cyan,
+      sunk:             " ".bg_blue,
+      sunk_x:           "X".white.bg_blue,
+      hidden_ship_hit:  "X".bold.red.bg_cyan,
+      shown_ship:       "S".black.bg_gray,
+      shown_ship_hit:   "X".bold.red.bg_gray,
+      ship_color:       " ".bg_gray
+    }
   end
-
-  def ships_row(y)
-    row_string = leading_space(y)
+  def visual_row(y, style)
+    # Place leading space at beginning of row
+    row_string = leading_space(y, style)
     x = 0
     @cell_grid[y].each do |cell|
-      # First place the single symbolic charactor or space
-      if cell.ship && cell.peg == " " #if ship; and cell not hit
-
-      # cell.ship will either be a a ship object or nil, never a string so the condition should read : if cell.ship == nil && cell.peg = " "
-
-        row_string += "S".black.bg_gray
-      else
-        row_string += graphical(cell.peg)
-      end
-      # Then place the space following the above
-      if cell.ship || (x != 9 && @cell_grid[y][x + 1].ship)
-        #if this or the following cell is a ship
-        row_string += " ".bg_gray
-      else
-        row_string += " ".bg_cyan
-      end
+      #First place the single symbolic charactor or space
+      row_string << visual[ graphic_type(cell, style) ]
+      #Then place the space following the above
+      next_cell = x == 9 ? nil : @cell_grid[y][x + 1]
+      row_string << visual[ space_type(cell, next_cell, style) ]
       x += 1
     end
     row_string
   end # ships_row
-
-  def leading_space(y)
-    # if the first cell contains a ship, the front border is ship color,
-    # otherwise it's sea color.
-    @cell_grid[y][0].ship ? " ".bg_gray : " ".bg_cyan
+  def graphic_type(cell, style)
+    return :miss if cell.peg == "*"
+    return :ocean if cell.peg == " " && cell.ship == nil
+    #fter the above returns, we know the cell has a ship
+    return :sunk_x if cell.ship.sunk?
+    if style == :hide_ships
+     return :ocean if cell.peg == " " #hidden but un-hit
+     return :hidden_ship_hit #cell.peg == "X"
+    end
+    #After the above returns, the cell must have an unhidden ship
+    return :shown_ship if cell.peg == " "
+    :shown_ship_hit #cell.peg == "X"
   end
-
-  def graphical(peg)
-    return " ".bg_cyan if peg == " "
-    return "*".black.bg_cyan if peg == "*"
-    return "X".bold.red.bg_gray if peg == "X"
+  def space_type(cell, next_cell, style)
+    if cell.ship == nil && (next_cell == nil || next_cell.ship == nil)
+    #if neither side is a ship
+      return :ocean
+    end
+    #After the above return, at least one side is a ship
+    if style == :hide_ships
+      #:sunk if either side is a sunk ship
+      return :sunk if cell.ship && cell.ship.sunk? ||
+            (next_cell != nil && next_cell.ship && next_cell.ship.sunk?)
+      return :ocean #if hide ships and neither side is sunk ship
+    else #style == :show_ships
+      #:ship_color if either side is an unsunk ship
+      return :ship_color if cell.ship && !cell.ship.sunk? ||
+                            (next_cell.ship && !next_cell.ship.sunk?)
+      return :sunk #if there's a ship, but no unsunk ones
+    end
+  end
+  def leading_space(y, style)
+    # if the first cell contains a ship, the front border is ship
+    # or sunk color; otherwise it's ocean color.
+    if @cell_grid[y][0].ship #if there's a ship on cell 0
+      return visual[:sunk] if @cell_grid[y][0].ship.sunk?
+      return visual[:ship_color] if style == :show_ships
+    end
+    visual[:ocean] #if anything else, including hidden ship
   end
 
 ### GENERAL UTILITY METHODS FOR BOARD CLASS ###
