@@ -1,4 +1,6 @@
 require './lib/board'
+require './lib/ship'
+require './lib/cell'
 require './lib/colors'
 require './lib/display'
 require 'pry'
