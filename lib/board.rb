@@ -1,4 +1,6 @@
-### Requires access to Cell, Ship & Colors
+require './lib/cell'
+require './lib/ship'
+require './lib/colors'
 
 class Board
   attr_reader :cell_grid, :ship_array
