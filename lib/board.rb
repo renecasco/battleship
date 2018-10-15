@@ -1,3 +1,5 @@
+require './lib/cell'
+
 # This class requires access to the Cell & Ship classes
 
 class Board
@@ -36,13 +38,17 @@ class Board
     return error if error != nil
     record_ship_in_cells(ship, points)
     nil #return if no error
+    # is line 40 necessary? What do lines 38 and 39 return?
   end
+
   def placement_error_check(ship, points)
     return :orientation_error if direction(points) == :diagonal
     return :length_error if span(points) != ship.size
     return :overlap_error if overlap_with_existing?(points)
     nil
+      # is line 48 necessary? What does this method return if lines 45, 46 and 47 are not executed?
   end
+
   def record_ship_in_cells(ship, points)
     index = get_start_index(points)
     span(points).times do
@@ -56,7 +62,6 @@ class Board
   end
 
 ### HELPER METHODS FOR SHIP PLACEMENT ERROR DETECTION ###
-
   def direction(points)
     if points[0][:y] == points[1][:y]
       :horizontal
@@ -66,6 +71,7 @@ class Board
       :diagonal
     end
   end
+
   def span(points)
     if direction(points) == :horizontal
       (points[1][:x] - points[0][:x]).abs + 1
@@ -73,10 +79,12 @@ class Board
       (points[1][:y] - points[0][:y]).abs + 1
     end
   end
+
   def overlap_with_existing?(points)
     index = get_start_index(points)
     overlapping?(points, index)
   end
+
   def overlapping?(points, index)
     overlap = false
     span(points).times do
@@ -91,6 +99,9 @@ class Board
   end
 
 ### METHOD FOR REGISTERING A SHOT ###
+
+ # I guess you needed the register_shot to test your board functionality in the temporary runner file. And that's perfectly fine for now. But it seems very repetitive that this method just calls place_peg and then we have to call register_shot from our player as well. We can just call cell.place_peg from player or the board. We also need to remember that  when we place a peg we're doing it on the opposite player's board. When we display ballistics it's also from the opposite player's board, not from ours.
+
 
   def register_shot(cell_name)
     @cell_grid[y_coord(cell_name)][x_coord(cell_name)].place_peg
@@ -116,6 +127,7 @@ class Board
     end
     visual_rows
   end
+
   def balistics_row(y)
     row_string = " ".bg_cyan #lead row with cyan border
     @cell_grid[y].each do |cell| #For each cell in this row
@@ -130,12 +142,16 @@ class Board
     end
     row_string
   end
+
   def ships_row(y)
     row_string = leading_space(y)
     x = 0
     @cell_grid[y].each do |cell|
       # First place the single symbolic charactor or space
       if cell.ship && cell.peg == " " #if ship; and cell not hit
+
+      # cell.ship will either be a a ship object or nil, never a string so the condition should read : if cell.ship == nil && cell.peg = " "
+
         row_string += "S".black.bg_gray
       else
         row_string += graphical(cell.peg)
@@ -151,11 +167,13 @@ class Board
     end
     row_string
   end # ships_row
+
   def leading_space(y)
     # if the first cell contains a ship, the front border is ship color,
     # otherwise it's sea color.
     @cell_grid[y][0].ship ? " ".bg_gray : " ".bg_cyan
   end
+
   def graphical(peg)
     return " ".bg_cyan if peg == " "
     return "*".black.bg_cyan if peg == "*"
@@ -163,7 +181,6 @@ class Board
   end
 
 ### GENERAL UTILITY METHODS FOR BOARD CLASS ###
-
   def get_start_index(points)
     # When preparing to enumerate between two cells, this method
     # gets the index for starting enumeration, whether the two cells
@@ -176,11 +193,14 @@ class Board
       points[1][:y] > points[0][:y] ? points[0][:y] : points[1][:y]
     end
   end
+
+  # We have the following methods duplicated in Cell. Do we need to keep both?
   def y_coord(cell_name)
     ("A".."J").to_a.index(cell_name[0])
   end
+
   def x_coord(cell_name)
-    cell_name[1..-1].to_i - 1
+    cell_name[1..-1].to_i - 1 #how about cell_name[1] since we're not looking through a range? We're just calling the second element in a string.
   end
 
 end #class Board

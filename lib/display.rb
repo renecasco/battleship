@@ -3,27 +3,34 @@ class Display
   def standard_gap
     "      "
   end
+
   def ships_title
     "        S H I P S      ".bold.green
   end
+
   def ships_underscore
     "        =========      "
   end
+
   def balistics_title
     "    B A L I S T I C S  ".bold.green
   end
+
   def balistics_underscore
     "    =================  "
   end
+
   def header_row
     "   1 2 3 4 5 6 7 8 9 10"
   end
+
   def board_key
     #All keys start with Ship
     key_string = "        " + " S ".black.bg_gray + " = Ship  "
     key_string += " X ".bold.red.bg_cyan + " = Hit  "
     key_string += " * ".black.bg_cyan + " = Miss"
   end
+
   def show_ship_placement(board)
   #This method simply uses the :ship style of the visual grid. To show
   #the ship bositions at the beginning of a round, the board must be free
