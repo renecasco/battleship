@@ -41,6 +41,12 @@ class BrainiacTest < Minitest::Test
     assert_instance_of Brainiac, @brainiac
   end
   def test_it_autoplaces_ships
+    assert_equal true, @brainiac.autoplace_all_ships(@board)
   end
+  def test_it_autoplaces_next_ship
+    ship_index = 0
+    assert_equal true, @brainiac.autoplace_ship(@board, ship_index)
+  end
+
 
 end #BrainiacTest
