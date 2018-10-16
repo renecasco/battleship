@@ -38,7 +38,6 @@ class Board
     return error if error != nil
     record_ship_in_cells(ship, points)
     nil #return if no error
-    # is line 40 necessary? What do lines 38 and 39 return?
   end
 
   def placement_error_check(ship, points)
@@ -210,7 +209,6 @@ class Board
     end
   end
 
-  # We have the following methods duplicated in Cell. Do we need to keep both?
   def y_coord(cell_name)
     ("A".."J").to_a.index(cell_name[0])
   end
