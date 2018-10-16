@@ -6,7 +6,6 @@ class Brainiac
     ship_count.times do #5 times for 5 ships
       autoplace_ship(board, i)
       i += 1
-      print "Placed #{i}"
     end
     nil
   end
@@ -40,6 +39,13 @@ class Brainiac
     else #if vertical
       {y: prow_coords[:y] + ship_size -1, x: prow_coords[:x]}
     end
+  end
+
+  def intelliguess(board) #returns string of form "J4"
+    @pgrid = [] #2D array of probabilities corresponding to all board cells
+    @hits = [] #array of visible hits
+    @floaters = [0] #hash of remaining ships per size
+        #floaters.each do |size, remaining|
   end
 
 end #class Brainiac
