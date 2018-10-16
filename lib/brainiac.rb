@@ -44,15 +44,74 @@ class Brainiac
   def intelliguess(board) #returns string of form "J4"
     load_floaters(board)
     @pgrid = load_pgrid(board)
-    print_pgrid
-    puts
     horizontal_probabilities
     vertical_probabilities
     print_pgrid
-    @hits = [] #array of hits-not-sunk
-    #load_hits
-        #example with hash: floaters.each do |size, remaining|
-    puts "intelliguess"
+    load_live_hits(board) #load @hits array of hits-not-sunk
+    print @hits
+    find_best_shot(board)
+    print "\n"
+  end
+
+  def find_best_shot(board)
+    best_shot = [0,0]
+    if @hits.count == 0
+      best_shot = best_in_pgrid(board)
+    else
+      best_shot = best_near_hits(board)
+    end
+    print "\n"
+    print best_shot
+    best_shot
+  end
+
+  def best_near_hits(board)
+    surrounds = [[-1,0],[0,1],[1,0],[0,-1]]
+    best = []
+    @hits.each do |hit|
+      surrounds.each do |surround|
+        shot = [hit[0] + surround[0], hit[1] + surround[1]]
+        if valid_shot?(board, shot)
+          if best == [] || @pgrid[shot[0]][shot[1]] > @pgrid[best[0]][best[1]]
+            best = shot
+          end
+        end
+      end
+    end
+    best
+  end
+
+  def valid_shot?(board, shot)
+    return false if shot[0] < 0 || shot[0] > 9
+    return false if shot[1] < 0 || shot[1] > 9
+    cell = board.cell_grid[shot[0]][shot[1]]
+    return false if cell.peg == "X" || cell.peg == "*"
+    true
+  end
+
+  def best_in_pgrid(board)
+    best = []
+    (0..9).each do |y|
+      (0..9).each do |x|
+        if @pgrid[y][x] != nil &&
+        (best == [] || @pgrid[y][x] > @pgrid[best[0]][best[1]])
+          best = [y,x]
+        end
+      end
+    end
+    best
+  end
+
+  def load_live_hits(board)
+    @hits = []
+    (0..9).each do |y|
+      (0..9).each do |x|
+        cell = board.cell_grid[y][x]
+        if cell.peg == "X" && cell.ship.sunk? == false
+          @hits << [y,x]
+        end
+      end
+    end
   end
 
   def load_pgrid(board)
