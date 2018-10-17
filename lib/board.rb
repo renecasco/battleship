@@ -45,7 +45,6 @@ class Board
     return :length_error if span(points) != ship.size
     return :overlap_error if overlap_with_existing?(points)
     nil
-      # is line 48 necessary? What does this method return if lines 45, 46 and 47 are not executed?
   end
 
   def record_ship_in_cells(ship, points)
@@ -214,7 +213,7 @@ class Board
   end
 
   def x_coord(cell_name)
-    cell_name[1..-1].to_i - 1 #how about cell_name[1] since we're not looking through a range? We're just calling the second element in a string.
+    cell_name[1..-1].to_i - 1
   end
 
 end #class Board

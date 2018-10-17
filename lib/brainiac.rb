@@ -42,31 +42,30 @@ class Brainiac
   end
 
   def intelliguess(board) #returns string of form "J4"
-    load_floaters(board)
-    @pgrid = load_pgrid(board)
-    horizontal_probabilities
-    vertical_probabilities
-    print_pgrid
-    load_live_hits(board) #load @hits array of hits-not-sunk
+    load_floaters(board) #load array of un-sunk ships types
+    @pgrid = load_pgrid(board) #initialize probability grid
+    horizontal_probabilities #add all horizontal probabilities
+    vertical_probabilities #add all vertical probabilities
+    print_pgrid #error testing method
+    load_live_hits(board) #load array of hits-not-sunk
     print @hits
-    find_best_shot(board)
+    print "\n"
+    b = find_best_shot(board) #returns two elemnt array by grid_coords
+    print yx_to_name({y: b[0], x: b[1]})
     print "\n"
   end
 
   def find_best_shot(board)
     best_shot = [0,0]
     if @hits.count == 0
-      best_shot = best_in_pgrid(board)
+      best_in_pgrid(board)
     else
-      best_shot = best_near_hits(board)
+      best_near_hits(board)
     end
-    print "\n"
-    print best_shot
-    best_shot
   end
 
   def best_near_hits(board)
-    surrounds = [[-1,0],[0,1],[1,0],[0,-1]]
+    surrounds = [ [0,1], [0,-1], [1,0], [-1,0] ]
     best = []
     @hits.each do |hit|
       surrounds.each do |surround|
@@ -193,7 +192,7 @@ class Brainiac
     end
   end
 
-  def print_pgrid
+  def print_pgrid #simply an error testing function
     (0..9).each do |y|
       (0..9).each do |x|
         if @pgrid[y][x] == nil
@@ -205,6 +204,12 @@ class Brainiac
       end
       print "\n"
     end
+  end
+
+  def yx_to_name(point) #where point is hash with :y & :x
+    y_char = ("A".."J").to_a[point[:y]]
+    x_char = (point[:x] + 1).to_s
+    y_char + x_char
   end
 
 end #class Brainiac
