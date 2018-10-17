@@ -60,6 +60,7 @@ class Board
   end
 
 ### HELPER METHODS FOR SHIP PLACEMENT ERROR DETECTION ###
+
   def direction(points)
     if points[0][:y] == points[1][:y]
       :horizontal
@@ -96,19 +97,31 @@ class Board
     overlap
   end
 
-### METHOD FOR REGISTERING A SHOT ###
-
- # I guess you needed the register_shot to test your board functionality in the temporary runner file. And that's perfectly fine for now. But it seems very repetitive that this method just calls place_peg and then we have to call register_shot from our player as well. We can just call cell.place_peg from player or the board. We also need to remember that  when we place a peg we're doing it on the opposite player's board. When we display ballistics it's also from the opposite player's board, not from ours.
-
+### METHODS FOR REGISTERING SHOTS, QUERYING SUNK SHIPS, QUERYING DEFEAT ###
 
   def register_shot(cell_name)
-
     cell = @cell_grid[y_coord(cell_name)][x_coord(cell_name)]
     result = cell.place_peg
     #returns :duplicate_shot_error if cell was already fired upon
     #otherwise, it returns the value of peg in the target cell
     cell.ship.hit! if result == "X"
     result
+  end
+
+  def sunk_ship_name?(cell_name)
+    ship = @cell_grid[y_coord(cell_name)][x_coord(cell_name)].ship
+    if ship.sunk?
+      ship.name
+    else
+      nil
+    end
+  end
+
+  def defeated?
+    @ship_array.each do |ship|
+      return false if ship.sunk? == false
+    end
+    true
   end
 
 ### METHODS FOR CREATING A VISUAL GRID ARRAY ###
@@ -180,7 +193,7 @@ class Board
     else #style == :show_ships
       #:ship_color if either side is an unsunk ship
       return :ship_color if cell.ship && !cell.ship.sunk? ||
-                            (next_cell.ship && !next_cell.ship.sunk?)
+            (next_cell != nil && next_cell.ship && !next_cell.ship.sunk?)
       return :sunk #if there's a ship, but no unsunk ones
     end
   end

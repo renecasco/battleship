@@ -46,13 +46,14 @@ class Brainiac
     @pgrid = load_pgrid(board) #initialize probability grid
     horizontal_probabilities #add all horizontal probabilities
     vertical_probabilities #add all vertical probabilities
-    print_pgrid #error testing method
+    #print_pgrid #error testing method
     load_live_hits(board) #load array of hits-not-sunk
-    print @hits
-    print "\n"
+    #print @hits
+    #print "\n"
     b = find_best_shot(board) #returns two elemnt array by grid_coords
-    print yx_to_name({y: b[0], x: b[1]})
-    print "\n"
+    guess = yx_to_name({y: b[0], x: b[1]})
+    #print guess + "\n"
+    guess
   end
 
   def find_best_shot(board)
@@ -196,10 +197,11 @@ class Brainiac
     (0..9).each do |y|
       (0..9).each do |x|
         if @pgrid[y][x] == nil
-          print "N "
+          printf("%2d ", 0)
+          #print "N "
         else
-          print @pgrid[y][x]
-          print " "
+          #print @pgrid[y][x]
+          printf("%2d ", @pgrid[y][x])
         end
       end
       print "\n"
