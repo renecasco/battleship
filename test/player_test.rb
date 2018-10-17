@@ -21,14 +21,4 @@ class PlayerTest < Minitest::Test
     assert_equal "human", player_1.player_type
   end
 
-  def test_player_can_fire_a_shot
-    board_1 = Board.new
-    board_2 = Board.new
-    player_1 = Player.new("Computer", board_1, "computer")
-    player_2 = Player.new("Joe", board_1, "person")
-    player
-    assert_equal , player_1.fire_shot()
-  end
-
-
 end
