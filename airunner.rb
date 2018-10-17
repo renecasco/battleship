@@ -31,7 +31,7 @@ def take_turn(player_name, turn_number, own_board, enemy_board)
 end
 
 total_turns = 0
-(1..1000).each do |game_number|
+(1..100).each do |game_number|
   board_1 = Board.new
   board_2 = Board.new
 
@@ -55,5 +55,5 @@ total_turns = 0
   print "#{winner} is victorious!!!\n"
   total_turns += turn_number
 end
-average_turns_per_game = total_turns / 1000
+average_turns_per_game = total_turns / 100
 print "\nAverage turns per game: #{average_turns_per_game}\n"

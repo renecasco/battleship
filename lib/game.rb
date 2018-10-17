@@ -1,5 +1,6 @@
 require './lib/player'
 require './lib/brainiac'
+require 'pry'
 
 class Game
 
@@ -10,12 +11,13 @@ class Game
   end
 
   def want_to_play
-    incorrect_input == false
-    while incorrect_input == false || answer = "I"
-      puts "Would you like to (" + "p".green.bold + ")lay, read the ("+ "i".green.bold + ")nstructions, or (" + "q".green.bold + ")uit?"
+    incorrect_input = false
+    while incorrect_input == false || answer == "I"
+      print "Would you like to (" + "p".green.bold + ")lay, read the ("+ "i".green.bold + ")nstructions, or (" + "q".green.bold + ")uit? "
       answer = gets.chomp.upcase
       if answer == "Q"
         puts "Sorry to see you go, thanks for playing Battleship!"
+        break
       elsif answer == "I"
         instructions
       elsif answer == "P"
@@ -28,9 +30,26 @@ class Game
     end
   end
 
-  def play
-    # computer places ships
+  def lets_play
+    computer = Player.new("Brainiac", :ai)
+    human = Player.new("Joe", :human)
+    computer.place_fleet
     computer_placed_ships_msg
+    human.place_fleet
+
+    turn_number = 0
+    winner = nil
+    begin
+      turn_number += 1
+      if human.take_turn(turn_number, computer.board) == :victory
+        winner = "Human"
+      elsif computer.take_turn(turn_number, human.board) == :victory
+        winner = "Computer"
+      end
+    end until winner != nil
+    print "#{winner} is victorious!!!\n"
+  end
+
     # until computer.board.all_ships_sunk? == true or player.board.all_ships_sunk? == true
       # player takes turn at firing shots
         # display boards
@@ -47,7 +66,7 @@ class Game
       #end
     #end
 
-  end
+
 
 
 
@@ -59,14 +78,12 @@ class Game
   end
 
   def computer_placed_ships_msg
-    puts "\n\nI have laid out my ships on the grid.\nYou now need to layout your ships.\nThe grid has A1 at the top left and J10 at the bottom right."
+    puts "\n\nI have laid out my ships on the grid.\nYou now need to layout your ships.\nThe grid has A1 at the top left and J10 at the bottom right.\n"
   end
 
 end
 
-
-
-
-welcome
-instructions
-computer_placed_ships_msg
+game = Game.new
+game.welcome
+game.want_to_play
+#computer_placed_ships_msg

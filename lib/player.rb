@@ -1,23 +1,26 @@
 require './lib/board'
 require './lib/display'
+require './lib/brainiac'
 
 class Player
     attr_reader :name,
                 :board,
                 :player_type
 
-  def initialize(name, board, player_type)
+  def initialize(name, player_type)
     @name = name
-    @board = board
+    @board = Board.new
     @player_type = player_type
+    @display = Display.new
+    @brainiac = Brainiac.new
   end
 
   def correct_placement(ship)
     validated = false
-    while validated =+ false
-      puts "Enter prow coordinates for #{ship.name}"
+    while validated == false
+      print "Enter prow coordinates for #{ship.name}: "
       prow = get_coordinates
-      puts "Enter stern coordinates for #{ship.name}"
+      print "Enter stern coordinates for #{ship.name}: "
       stern = get_coordinates
       case @board.place_ship(ship, prow, stern)
       when nil
@@ -38,22 +41,49 @@ class Player
   end
 
   def place_fleet
-    @board.ship_array.each do |ship|
-      puts "Let's place your #{ship.name}. This ship is #{ship.size} cells long"
-      correct_placement(ship)
+    if @player_type == :ai
+      @brainiac.autoplace_all_ships(@board)
+    else
+      @board.ship_array.each do |ship|
+        @display.show_ship_placement(@board)
+        puts "\nLet's place your #{ship.name}. This ship is #{ship.size} cells long"
+        correct_placement(ship)
+      end
+      puts "\nSuccess! You've placed your fleet on your board\n"
     end
-    puts "Success! You've placed your fleet on your board"
   end
 
-  def fire_shot(enemy_board)
-    puts "Enter coordinates for your shot"
-    enemy_board.register_shot(get_coordinates)
+  def take_turn(turn_number, enemy_board)
+    if @player_type == :ai
+      shot = @brainiac.intelliguess(enemy_board) #guess is a cell name, ie J4
+    else
+      print "Enter coordinates for your shot: "
+      shot = get_coordinates
+    end
+    result = enemy_board.register_shot(shot)
+    if @player_type == :human
+      @display.show_console(@board, enemy_board)
+    end
+    print "#{@name}, Turn #{turn_number}. Shot: #{shot}.  "
+    if result == "X"
+      print "HIT!\n"
+      ship_name = enemy_board.sunk_ship_name?(shot)
+      if ship_name != nil
+        print "#{@name} sunk a " + ship_name + "!   "
+        if enemy_board.defeated?
+          return :victory
+        end
+      end
+    else
+      print "Miss.\n"
+    end
+    :continue
   end
 
   def get_coordinates
     validated = false
     while validated == false
-      coordinates = gets.chomp
+      coordinates = gets.chomp.upcase
       if ("A".."J").include?(coordinates[0].upcase) && (1..10).include?(coordinates[1].to_i)
         validated = true
       else
