@@ -96,4 +96,15 @@ computer_board.register_shot("I6")
 computer_board.register_shot("I7")
 computer_board.register_shot("I8")
 
+computer_board.register_shot("A8")
+computer_board.register_shot("B8")
+computer_board.register_shot("C8")
+computer_board.register_shot("D8")
+computer_board.register_shot("E8")
+computer_board.register_shot("G8")
+computer_board.register_shot("J8")
+
+
+
 display.show_console(human_board, computer_board)
+brainiac.intelliguess(computer_board)
