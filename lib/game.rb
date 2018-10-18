@@ -11,9 +11,10 @@ class Game
   end
 
   def play
+    answer = ""
     incorrect_input = false
-    while incorrect_input == false || answer == "I"
-      print "Would you like to (" + "p".green.bold + ")lay, read the ("+ "i".green.bold + ")nstructions, or (" + "q".green.bold + ")uit? "
+    until answer == "Q"
+      print "\nWould you like to (" + "p".green.bold + ")lay, read the ("+ "i".green.bold + ")nstructions, or (" + "q".green.bold + ")uit? "
       answer = gets.chomp.upcase
       if answer == "Q"
         puts "Sorry to see you go, thanks for playing Battleship!"
@@ -24,15 +25,14 @@ class Game
         lets_play
         break
       else
-        puts "ERROR: Incorrect input! "
-        incorrect_input = true
+        puts "Not recognized. Please try again. "
       end
     end
   end
 
   def lets_play
     computer = Player.new("Brainiac", :ai)
-    human = Player.new("Joe", :human)
+    human = Player.new("Human", :human)
     computer.place_fleet
     computer_placed_ships_msg
     human.place_fleet
@@ -52,7 +52,7 @@ class Game
 
   def instructions
     puts "\nShip Placement".green.bold
-    puts " The first stage of the game is ship placement. Each player will\n take turns to place their fleet. You will be prompted to enter\n the coordinates for the prow and stern for each ship.\n Coordinates consist of a letter from A to J and a number from\n 1 to 10. (e.g.: B4, E7, C3, etc.)"
+    puts " The first stage of the game is ship placement. Each player will\n take turns to place their fleet. You will be prompted to enter\n the coordinates for the prow and stern for each ship.\n Coordinates consist of a letter from A to J and a number from\n 1 to 10. (e.g.: B4 B6 )"
     puts "\nShot Sequence".green.bold
     puts " The second stage of the game is firing shots at the enemy's fleet.\n Players will take turns by entering coordinates in the format\n described above. Once again, you will be prompted each time your\n turn is up. The player who sinks all of the enemy's ships first\n wins the game."
   end

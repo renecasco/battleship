@@ -1,6 +1,7 @@
 require './lib/board'
 require './lib/display'
 require './lib/brainiac'
+require 'pry'
 
 class Player
     attr_reader :name,
@@ -18,10 +19,14 @@ class Player
   def correct_placement(ship)
     validated = false
     while validated == false
-      print "Enter prow coordinates for #{ship.name}: "
-      prow = get_coordinates
-      print "Enter stern coordinates for #{ship.name}: "
-      stern = get_coordinates
+      print "Enter prow and stern coordinates for #{ship.name}: "
+      input = get_coordinates_ship
+      if input == nil
+        @brainiac.autoplace_ship(@board, @board.ship_array.find_index(ship))
+        return
+      end
+      prow = input[0]
+      stern = input[1]
       case @board.place_ship(ship, prow, stern)
       when nil
         validated = true
@@ -47,8 +52,9 @@ class Player
       @board.ship_array.each do |ship|
         @display.show_ship_placement(@board)
         puts "\nLet's place your #{ship.name}. This ship is #{ship.size} cells long"
-        correct_placement(ship)
+        correct_placement(ship, )
       end
+      @display.show_ship_placement(@board)
       puts "\nSuccess! You've placed your fleet on your board\n"
     end
   end
@@ -57,13 +63,12 @@ class Player
     if @player_type == :ai
       shot = @brainiac.intelliguess(enemy_board) #guess is a cell name, ie J4
     else
+      @display.show_console(@board, enemy_board)
       print "Enter coordinates for your shot: "
       shot = get_coordinates
+      shot = @brainiac.intelliguess(enemy_board) if shot == nil
     end
     result = enemy_board.register_shot(shot)
-    if @player_type == :human
-      @display.show_console(@board, enemy_board)
-    end
     print "#{@name}, Turn #{turn_number}. Shot: #{shot}.  "
     if result == "X"
       print "HIT!\n"
@@ -71,6 +76,11 @@ class Player
       if ship_name != nil
         print "#{@name} sunk a " + ship_name + "!   "
         if enemy_board.defeated?
+          if @player_type == :human
+            @display.show_console(@board, enemy_board)
+          else
+            @display.show_console(enemy_board, @board)
+          end
           return :victory
         end
       end
@@ -80,17 +90,40 @@ class Player
     :continue
   end
 
+  def get_coordinates_ship
+    validated = true
+    begin
+      coordinates = gets.chomp.upcase
+      return nil if coordinates == ""
+      coordinates = coordinates.split
+      if coordinates.length != 2
+        validated = false
+      else
+        coordinates.each do |coordinate|
+          if !(("A".."J").include?(coordinate[0])) || !((1..10).include?(coordinate[1..-1].to_i))
+            validated = false
+          end
+        end
+      end
+      if validated == false
+        puts "Invalid input, please enter prow and stern coordinates (e.g.: B3 D3)"
+      end
+    end until validated == true
+    coordinates
+  end
+
   def get_coordinates
     validated = false
     while validated == false
-      coordinates = gets.chomp.upcase
-      if ("A".."J").include?(coordinates[0].upcase) && (1..10).include?(coordinates[1].to_i)
-        validated = true
+      coordinate = gets.chomp.upcase
+      return nil if coordinate == ""
+      if ("A".."J").include?(coordinate[0]) && (1..10).include?(coordinate[1..-1].to_i)
+          validated = true
       else
         puts "Invalid input, please enter a letter from A to J and a number from 1 to 10. e.g.: 'B3'"
       end
     end
-    coordinates
+    coordinate
   end
 
 end
