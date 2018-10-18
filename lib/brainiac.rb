@@ -22,10 +22,12 @@ class Brainiac
     end until !overlap
     board.record_ship_in_cells(board.ship_array[ship_index], points)
   end
+
   def random_orientation
     return :horizontal if rand(2) == 0
     :vertical
   end
+
   def random_prow_coords(ship_size, orientation)
     board_size = 10
     max_start = board_size - ship_size + 1
@@ -33,6 +35,7 @@ class Brainiac
     long = rand(10)
     orientation == :horizontal ? {y: long, x: short} : {y: short, x: long}
   end
+
   def find_stern(prow_coords, ship_size, orientation)
     if orientation == :horizontal
       {y: prow_coords[:y], x: prow_coords[:x] + ship_size - 1}
@@ -46,13 +49,10 @@ class Brainiac
     @pgrid = load_pgrid(board) #initialize probability grid
     horizontal_probabilities #add all horizontal probabilities
     vertical_probabilities #add all vertical probabilities
-    #print_pgrid #error testing method
+    print_pgrid #error testing method
     load_live_hits(board) #load array of hits-not-sunk
-    #print @hits
-    #print "\n"
-    b = find_best_shot(board) #returns two elemnt array by grid_coords
-    guess = yx_to_name({y: b[0], x: b[1]})
-    #print guess + "\n"
+    best = find_best_shot(board) #returns two elemnt array by grid_coords
+    guess = yx_to_name({y: best[0], x: best[1]})
     guess
   end
 
@@ -151,6 +151,7 @@ class Brainiac
       end
     end
   end
+
   def horz_ship_fits?(y, prow, ship_size)
     stern = prow + ship_size - 1
     (prow..stern).each do |x|
@@ -158,6 +159,7 @@ class Brainiac
     end
     true
   end
+
   def horz_add_probs(y, prow, ship_size)
     stern = prow + ship_size - 1
     (prow..stern).each do |x|
@@ -179,6 +181,7 @@ class Brainiac
       end
     end
   end
+
   def vert_ship_fits?(prow, x, ship_size)
     stern = prow + ship_size - 1
     (prow..stern).each do |y|
@@ -186,6 +189,7 @@ class Brainiac
     end
     true
   end
+
   def vert_add_probs(prow, x, ship_size)
     stern = prow + ship_size - 1
     (prow..stern).each do |y|

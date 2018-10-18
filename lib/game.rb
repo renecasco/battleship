@@ -1,16 +1,16 @@
 require './lib/player'
-require './lib/brainiac'
 require 'pry'
 
 class Game
 
   def welcome
+    puts
     puts "=".white.bg_cyan * 61
-    puts "  ".bg_blue + "            ***   Welcome to BATTLESHIP  ***             ".red.bg_gray.bold  + "  ".bg_blue
+    puts "  ".bg_blue + "            ***   WELCOME TO BATTLESHIP  ***             ".red.bg_gray.bold  + "  ".bg_blue
     puts puts "=".white.bg_cyan * 61
   end
 
-  def want_to_play
+  def play
     incorrect_input = false
     while incorrect_input == false || answer == "I"
       print "Would you like to (" + "p".green.bold + ")lay, read the ("+ "i".green.bold + ")nstructions, or (" + "q".green.bold + ")uit? "
@@ -44,31 +44,11 @@ class Game
       if human.take_turn(turn_number, computer.board) == :victory
         winner = "Human"
       elsif computer.take_turn(turn_number, human.board) == :victory
-        winner = "Computer"
+        winner = "Brainiac"
       end
     end until winner != nil
     print "#{winner} is victorious!!!\n"
   end
-
-    # until computer.board.all_ships_sunk? == true or player.board.all_ships_sunk? == true
-      # player takes turn at firing shots
-        # display boards
-        # prompt for coordinates and fire shot
-        # display boards and and indicate wether it was hit or miss
-        # prompt player to press enter to continue
-        # all_ships_sunk?
-          # congrats! you win! exit
-      # computer takes turn at firing shots
-        # computer_fires_shot
-        # display boards to player
-        # all_ships_sunk?
-          # Sorry, computer won.
-      #end
-    #end
-
-
-
-
 
   def instructions
     puts "\nShip Placement".green.bold
@@ -82,8 +62,3 @@ class Game
   end
 
 end
-
-game = Game.new
-game.welcome
-game.want_to_play
-#computer_placed_ships_msg

@@ -93,6 +93,4 @@ class Player
     coordinates
   end
 
-
-
 end

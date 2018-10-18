@@ -141,6 +141,7 @@ class Board
     end
     visual_rows
   end
+
   def visual
     { miss:             "*".black.bg_cyan,
       ocean:            " ".bg_cyan,
@@ -152,6 +153,7 @@ class Board
       ship_color:       " ".bg_gray
     }
   end
+
   def visual_row(y, style)
     # Place leading space at beginning of row
     row_string = leading_space(y, style)
@@ -165,7 +167,8 @@ class Board
       x += 1
     end
     row_string
-  end # ships_row
+  end # visual_row
+
   def graphic_type(cell, style)
     return :miss if cell.peg == "*"
     return :ocean if cell.peg == " " && cell.ship == nil
@@ -179,6 +182,7 @@ class Board
     return :shown_ship if cell.peg == " "
     :shown_ship_hit #cell.peg == "X"
   end
+
   def space_type(cell, next_cell, style)
     if cell.ship == nil && (next_cell == nil || next_cell.ship == nil)
     #if neither side is a ship
@@ -197,6 +201,7 @@ class Board
       return :sunk #if there's a ship, but no unsunk ones
     end
   end
+
   def leading_space(y, style)
     # if the first cell contains a ship, the front border is ship
     # or sunk color; otherwise it's ocean color.

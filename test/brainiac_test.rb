@@ -47,6 +47,5 @@ class BrainiacTest < Minitest::Test
     ship_index = 0
     assert_equal true, @brainiac.autoplace_ship(@board, ship_index)
   end
-
-
+  
 end #BrainiacTest
