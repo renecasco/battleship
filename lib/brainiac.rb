@@ -49,7 +49,7 @@ class Brainiac
     @pgrid = load_pgrid(board) #initialize probability grid
     horizontal_probabilities #add all horizontal probabilities
     vertical_probabilities #add all vertical probabilities
-    print_pgrid #error testing method
+    #print_pgrid #error testing method
     load_live_hits(board) #load array of hits-not-sunk
     best = find_best_shot(board) #returns two elemnt array by grid_coords
     guess = yx_to_name({y: best[0], x: best[1]})

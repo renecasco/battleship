@@ -8,7 +8,7 @@ class Display
   #This method uses the :ship style of the visual grid. To properly show
   #the ship bositions at the beginning of a round, the board must be
   #freshly initialized and free of hits and misses.
-    print "\n\n"
+    print "\n"
     print header_row + "\n"
     visual_grid = board.visual_grid(:show_ships)
     y = 0
